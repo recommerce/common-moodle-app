@@ -1,0 +1,3 @@
+[submodule "auth/saml2"]
+	path = auth/saml2
+	url = https://github.com/catalyst/moodle-auth_saml2.git

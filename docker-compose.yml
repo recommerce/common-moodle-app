@@ -1,0 +1,32 @@
+version: '3'
+services:
+  fpm:
+    image: 131826866465.dkr.ecr.eu-west-1.amazonaws.com/common-moodle-app:live-4
+    build:
+      context: .
+      dockerfile: .docker/fpm/Dockerfile
+    environment:
+      - MOODLE_DATABASE_HOST=mysql
+      - MOODLE_DATABASE_NAME=common_moodle_app
+      - MOODLE_DATABASE_PASSWORD=your_mysql_password
+      - MOODLE_DATABASE_TYPE=auroramysql
+      - MOODLE_DATABASE_USER=common_moodle_app
+      - MOODLE_URL=http://admin-tools.recommerce.cloud:8080
+  nginx:
+    image: 131826866465.dkr.ecr.eu-west-1.amazonaws.com/docker-images:nginx1.25-fpm-alpine
+    ports:
+      - 8080:80
+    volumes_from:
+      - fpm
+  mysql:
+      image: mysql:latest
+      environment:
+        MYSQL_ROOT_PASSWORD: your_root_password
+        MYSQL_DATABASE: common_moodle_app
+        MYSQL_USER: common_moodle_app
+        MYSQL_PASSWORD: your_mysql_password
+      volumes:
+        - mysql_data:/var/lib/mysql
+
+  volumes:
+    mysql_data:
