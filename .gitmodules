@@ -1,3 +1,6 @@
 [submodule "auth/saml2"]
 	path = auth/saml2
 	url = https://github.com/catalyst/moodle-auth_saml2.git
+[submodule "course/format/topicsactivitycards"]
+	path = course/format/topicsactivitycards
+	url = https://github.com/andrewhancox/format_topicsactivitycards.git
