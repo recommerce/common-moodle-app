@@ -9,7 +9,7 @@ services:
       - MOODLE_DATABASE_HOST=mysql
       - MOODLE_DATABASE_NAME=common_moodle_app
       - MOODLE_DATABASE_PASSWORD=your_mysql_password
-      - MOODLE_DATABASE_TYPE=auroramysql
+      - MOODLE_DATABASE_TYPE=mysql
       - MOODLE_DATABASE_USER=common_moodle_app
       - MOODLE_URL=http://admin-tools.recommerce.cloud:8080
   nginx:
@@ -28,5 +28,5 @@ services:
       volumes:
         - mysql_data:/var/lib/mysql
 
-  volumes:
-    mysql_data:
+volumes:
+  mysql_data:

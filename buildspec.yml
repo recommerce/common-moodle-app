@@ -1,0 +1,52 @@
+version: 0.2
+
+env:
+  variables:
+    AWS_DEFAULT_REGION: "eu-west-1"
+    IMAGE_REPO_NAME: "api-platform-skeleton"
+    NR_APP_NAME: "api-platform-skeleton"
+    CODEBUILD_RESOLVED_SOURCE_VERSION: "NOT-SPECIFIED"
+
+  parameter-store:
+    AWS_ACCESS_KEY_ID: "ACCESS_KEY"
+    AWS_SECRET_ACCESS_KEY: "SECRET_KEY"
+    NR_LICENCE_KEY: "NR_LICENCE_KEY"
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - echo changing IMAGE_TAG to $IMAGE_TAG and BUILD_NUMBER to $CODEBUILD_BUILD_NUMBER
+      - sed -i "s/IMAGE_TAG/$IMAGE_TAG/g; s/BUILD_NUMBER/$CODEBUILD_BUILD_NUMBER/g; s/AWS_ACCOUNT_ID/$AWS_ACCOUNT_ID/g; s/IMAGE_REPO_NAME/$IMAGE_REPO_NAME/g; s/AWS_DEFAULT_REGION/$AWS_DEFAULT_REGION/g" .docker/aws/Dockerecs.aws.json
+
+  build:
+    commands:
+      - echo Build started on `date`
+      - export PHP_IMAGE=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:fpm-${IMAGE_TAG}-${CODEBUILD_BUILD_NUMBER}
+      - export PHP_IMAGE_LATEST=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:fpm-${IMAGE_TAG}-latest
+      - echo PHP_IMAGE=${PHP_IMAGE}
+      - echo PHP_IMAGE_LATEST=${PHP_IMAGE_LATEST}
+      - export NGINX_IMAGE=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:nginx-$IMAGE_TAG-$CODEBUILD_BUILD_NUMBER
+      - export NGINX_IMAGE_LATEST=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:nginx-$IMAGE_TAG-latest
+      - echo NGINX_IMAGE=${NGINX_IMAGE}
+      - echo NGINX_IMAGE_LATEST=${NGINX_IMAGE_LATEST}
+
+      - echo Building the Docker image...
+      - docker-compose -f docker-compose.yml build --pull
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing Docker images
+      - docker-compose -f docker-compose.yml push
+      - echo Tagging Docker images with latest
+      - docker tag ${PHP_IMAGE} ${PHP_IMAGE_LATEST}
+      - docker push ${PHP_IMAGE_LATEST}
+      - docker tag ${NGINX_IMAGE} ${NGINX_IMAGE_LATEST}
+      - docker push ${NGINX_IMAGE_LATEST}
+
+artifacts:
+  files:
+    - '**/*'
+cache:
+  paths:
+    - '~/.composer/cache'
