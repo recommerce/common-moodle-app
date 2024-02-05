@@ -1,7 +1,7 @@
 version: '3'
 services:
   fpm:
-    image: 131826866465.dkr.ecr.eu-west-1.amazonaws.com/common-moodle-app:live-4
+    image: ${PHP_IMAGE:-131826866465.dkr.ecr.eu-west-1.amazonaws.com/api-platform-skeleton:fpm-dev-latest}
     build:
       context: .
       dockerfile: .docker/fpm/Dockerfile
