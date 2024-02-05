@@ -14,6 +14,9 @@ services:
       - MOODLE_URL=http://admin-tools.recommerce.cloud:8080
   nginx:
     image: ${NGINX_IMAGE:-131826866465.dkr.ecr.eu-west-1.amazonaws.com/common-moodle-app:nginx-dev-latest}
+    build:
+      context: .
+      dockerfile: .docker/nginx/Dockerfile
     ports:
       - 8080:80
     volumes_from:
