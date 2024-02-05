@@ -15,6 +15,7 @@ phases:
   pre_build:
     commands:
       - git submodule init
+      - git submodule update --recursive
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       - echo changing IMAGE_TAG to $IMAGE_TAG and BUILD_NUMBER to $CODEBUILD_BUILD_NUMBER
