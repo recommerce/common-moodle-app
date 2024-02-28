@@ -1,2 +1,2 @@
 # see https://doc.oroinc.com/backend/cron/
-*/1 * * * *  . /usr/local/share/env.sh > /dev/null && /usr/bin/php /var/www/publicadmin/cli/cron.php >> /dev/null
+*/1 * * * *  . /usr/local/share/env.sh > /dev/null && /usr/bin/php /var/www/public/admin/cli/cron.php >> /dev/null
