@@ -4,3 +4,9 @@
 [submodule "course/format/topicsactivitycards"]
 	path = course/format/topicsactivitycards
 	url = https://github.com/andrewhancox/format_topicsactivitycards.git
+[submodule "enrol/autoenrol"]
+	path = enrol/autoenrol
+	url = https://github.com/bobopinna/moodle-enrol_autoenrol.git
+[submodule "enrol/coursecompleted"]
+	path = enrol/coursecompleted
+	url = https://github.com/ewallah/moodle-enrol_coursecompleted.git
